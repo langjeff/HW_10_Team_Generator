@@ -13,6 +13,52 @@ const render = require("./lib/htmlRenderer");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+// * need first question to ask what type of employee they would like to add /
+const emplTypes = ["Engineer", "Intern", "Manager"]; // * array for types of employees to pass to inquirer
+
+
+// * initial prompt to run when app.js is called in terminal
+inquirer.prompt([
+    {
+      type: 'confirm',
+      message: 'Would you like to add an employee?',
+      name: 'addConfirm',
+    },
+  ])
+  .then(function (response) {
+    //   console.log(response);
+      if(response.addConfirm) {
+        addEmployee();    
+      } else {
+          // ! insert function for rendering once addConfirm is No.
+          return;
+      }   
+    }
+  );
+
+const addEmployee = () => {
+    inquirer.prompt([
+            {
+            type: 'list',
+            message: 'What type of employee are you adding?',
+            choices: emplTypes,
+            name: 'emplType',
+            },
+          ])
+          .then(function (response) {
+              //* switch for evaluating response and returning additional questions array.
+                switch(response.emplType) {
+                    
+                }
+          })
+}
+
+// * switch statement for other questions arrays. /
+// * push statement to add object from answers to array (will be passed to render function at end()) /  
+// * last question in each one is "Add another employee?" /
+// * if(yes) run function again. if(no) call render();  /
+
+
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
