@@ -1,64 +1,146 @@
+//* local dependency constants 
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const inquirer = require("inquirer");
-const path = require("path");
-const fs = require("fs");
-
-const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-// * need first question to ask what type of employee they would like to add /
-const emplTypes = ["Engineer", "Intern", "Manager"]; // * array for types of employees to pass to inquirer
+//* npm package depencies
+const inquirer = require("inquirer");
+const path = require("path");
+const fs = require("fs");
+
+//* .fs paths constants
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 
-// * initial prompt to run when app.js is called in terminal
-inquirer.prompt([
-    {
-      type: 'confirm',
-      message: 'Would you like to add an employee?',
-      name: 'addConfirm',
-    },
-  ])
-  .then(function (response) {
-    //   console.log(response);
-      if(response.addConfirm) {
-        addEmployee();    
-      } else {
-          // ! insert function for rendering once addConfirm is No.
-          return;
-      }   
-    }
-  );
+//* constants for questions arrays & employee types.
+const employees = [];
+const employeeRoles = ["Engineer", "Intern"]; // * array for types of employees to pass to inquirer
+const allQuest = {
+  manager: [ 
+  //* name, id, email, officeNumber
+  {
+            name: 'name',       
+            type: 'input',
+            message: 'Please input the team members first name and last name.'
+  },
+  {
+            name: 'id',       
+            type: 'input',
+            message: 'Please input the team members id.'
+  },
+  {
+            name: 'email',       
+            type: 'input',
+            message: 'Please input the team members email.'
+  },
+  {
+            name: 'officeNumber',       
+            type: 'input',
+            message: 'Please input the team members office number.'
+  }, 
+],
+ engineer: [ 
+  //* name, id, email, github
+  {
+            name: 'name',       
+            type: 'input',
+            message: 'Please input the team members first name and last name.'
+  },
+  {
+            name: 'id',       
+            type: 'input',
+            message: 'Please input the team members id.'
+  },
+  {
+            name: 'email',       
+            type: 'input',
+            message: 'Please input the team members email.'
+  },
+  {
+            name: 'gihub',       
+            type: 'input',
+            message: 'Please input the team members github username.'
+  }, 
+],
+intern:  [ 
+  //* name, id, email, school
+  {
+            name: 'name',       
+            type: 'input',
+            message: 'Please input the team members first name and last name.'
+  },
+  {
+            name: 'id',       
+            type: 'input',
+            message: 'Please input the team members id.'
+  },
+  {
+            name: 'email',       
+            type: 'input',
+            message: 'Please input the team members email.'
+  },
+  {
+            name: 'school',       
+            type: 'input',
+            message: 'Please input the team members office number.'
+  }, 
+],
+};
+//* function to launch manager questions
 
-const addEmployee = () => {
-    inquirer.prompt([
+
+
+const employeeQuest = () => {
+          //* prompt for adding an employee
+            inquirer.prompt([
             {
-            type: 'list',
-            message: 'What type of employee are you adding?',
-            choices: emplTypes,
-            name: 'emplType',
+            name: 'choice',  
+            type: 'confirm',
+            message: 'Would you like to add a team member?',
             },
           ])
-          .then(function (response) {
-              //* switch for evaluating response and returning additional questions array.
-                switch(response.emplType) {
-                    
-                }
-          })
-}
+          .then((answer) => {
+            //* if true what role
+            if(answer) {
+              inquirer.prompt([
+                {
+                name: 'role',  
+                type: 'list',
+                message: 'What role?',
+                choices: employeeRoles,
+                },
+              ])  
+              .then((empl) => {
+              questions(empl);
+              })        
+              } 
+              else {
+                console.log("Creating your HTML page\!"); 
+                console.log(employees);
+                render(employees);
+              }
+          });     
+};
 
-// * switch statement for other questions arrays. /
-// * push statement to add object from answers to array (will be passed to render function at end()) /  
-// * last question in each one is "Add another employee?" /
-// * if(yes) run function again. if(no) call render();  /
+const questions = (empl) => {
+   const qArray = this.empl;
+  //* need way to extract questions from array.
+  console.log(qArray);
+  inquirer.prompt(qArray)
+  .then((answer) => {
+    employees.push(answer);
+    console.log(answer);
+    employeeQuest();
+  });
+  console.log(employees);
 
+};
 
+employeeQuest();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
